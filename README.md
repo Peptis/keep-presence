@@ -19,19 +19,6 @@ I have also introduced an additional command line argument that controls whether
 
 [![Demo](demo/demo.gif)](https://github.com/carrot69/keep-presence)
 
-## Install with Snap
-
-```
-sudo snap install keep-presence
-```
-
-<a href="https://snapcraft.io/keep-presence" target="_blank">
-  <img alt="Get it from the Snap Store"
-       src="https://snapcraft.io/static/images/badges/en/snap-store-black.svg"
-       align="center"
-       height="50">
-</a>
-
 ##### Run
 
 ```
