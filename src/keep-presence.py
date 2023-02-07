@@ -6,6 +6,9 @@ from datetime import datetime
 from pynput.mouse import Controller as MouseController
 from pynput.keyboard import Key, Controller as KeyboardController
 import random
+import os
+import pathlib
+
 
 mouse = MouseController()
 keyboard = KeyboardController()
@@ -17,14 +20,15 @@ PIXELS_TO_MOVE = 1
 MOUSE_DIRECTION_DELTA = 0
 RAND_INTERVAL_START = 0
 RAND_INTERVAL_STOP = 0
+DISABLED_AT_STARTUP = False
 
 move_mouse_every_seconds = 300
 mouse_direction = 0
 
-
 def define_custom_seconds():
     global move_mouse_every_seconds, PIXELS_TO_MOVE, PRESS_SHIFT_KEY, MOVE_MOUSE, \
-        MOUSE_DIRECTION_DELTA, RANDOM_MODE, RAND_INTERVAL_START, RAND_INTERVAL_STOP
+        MOUSE_DIRECTION_DELTA, RANDOM_MODE, RAND_INTERVAL_START, RAND_INTERVAL_STOP, \
+        DISABLED_AT_STARTUP
 
     parser = argparse.ArgumentParser(
         description="This program moves the mouse or press a key when it detects that you are away. "
@@ -57,6 +61,11 @@ def define_custom_seconds():
              "Execute actions based on a random interval between start and stop seconds. "
              "Note: Overwrites the seconds argument.")
 
+    parser.add_argument(
+        "-d", "--disabled", action='store_true',
+        help="Disables keep-presence at startup (adds the ~/.keep-presence-disabled file). "
+             "This is useful if you are enabling/disabling this program's operation via another method.")
+
     args = parser.parse_args()
     mode = args.mode
     random_seconds_interval = args.random
@@ -78,6 +87,9 @@ def define_custom_seconds():
         if RAND_INTERVAL_START > RAND_INTERVAL_STOP:
             print("Error: Random initial number needs to be lower than random limit number.")
             exit()
+
+    if args.disabled:
+        DISABLED_AT_STARTUP = True
 
     is_both_enabled = 'both' == mode
     is_keyboard_enabled = 'keyboard' == mode or is_both_enabled
@@ -151,12 +163,29 @@ def execute_keep_awake_action():
 define_custom_seconds()
 lastSavePosition = (0, 0)
 
+lockfile_path = os.path.expanduser("~/.keep-presence-disabled")
+
+
+# Control initial state via presence of lockfile
+if DISABLED_AT_STARTUP:
+    print(get_now_timestamp(), f"Creating file {lockfile_path}")
+    pathlib.Path(lockfile_path).touch()
+else:
+    try:
+        print(get_now_timestamp(), f"Removing file {lockfile_path} (if it exists)")
+        os.remove(lockfile_path)
+    except FileNotFoundError:
+        pass
+
 try:
     while 1:
+        is_enabled = not os.path.exists(lockfile_path)
+        print(get_now_timestamp(), f"Is enabled: {is_enabled}")
+
         currentPosition = mouse.position
         is_user_away = currentPosition == lastSavePosition
 
-        if is_user_away:
+        if is_enabled and is_user_away:
             execute_keep_awake_action()
             currentPosition = mouse.position
 
