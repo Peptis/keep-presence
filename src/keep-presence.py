@@ -15,6 +15,7 @@ keyboard = KeyboardController()
 
 MOVE_MOUSE = False
 PRESS_SHIFT_KEY = False
+PRESS_CTRL_KEY = False
 RANDOM_MODE = False
 PIXELS_TO_MOVE = 1
 MOUSE_DIRECTION_DELTA = 0
@@ -98,6 +99,7 @@ def define_custom_seconds():
     print('--------')
     if is_keyboard_enabled:
         PRESS_SHIFT_KEY = True
+        PRESS_CTRL_KEY = True
         print(get_now_timestamp(), "Keyboard is enabled")
 
     if is_mouse_enabled:
@@ -144,6 +146,11 @@ def press_shift_key():
     keyboard.release(Key.shift)
     print(get_now_timestamp(), 'Shift key pressed')
 
+def press_ctrl_key():
+    keyboard.press(Key.ctrl)
+    keyboard.release(Key.ctrl)
+    print(get_now_timestamp(), 'Ctrl key pressed')
+
 
 def get_now_timestamp():
     now = datetime.now()
@@ -158,6 +165,10 @@ def execute_keep_awake_action():
 
     if PRESS_SHIFT_KEY:
         press_shift_key()
+
+    if PRESS_CTRL_KEY:
+        press_ctrl_key()
+
 
 
 define_custom_seconds()
