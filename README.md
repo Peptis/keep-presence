@@ -1,18 +1,21 @@
 # Keep Presence (fork)
 
-This program moves the mouse or press a key when it detects that you are away.  
-It won't do anything if you are using your computer.  
-Useful to trick your machine to think you are still working with it. 
+This program moves the mouse or press a key when it detects that you are away.
+It won't do anything if you are using your computer. Useful to trick your
+machine to think you are still working with it. 
 
 #### Additional functionality introduced by this forked version
 
-Allows keep-presence to be enabled/disabled via the presence of a file located at `~/.keep-presence-disabled`. If this file exists
-then keep-presence will not attempt to trick the machine that it's being used.
+Allows keep-presence to be enabled/disabled via the presence of a file located
+at `~/.keep-presence-disabled`. If this file exists then keep-presence will not
+attempt to trick the machine that it's being used.
 
-I am using this additional functionality alongside i3blocks, whereby I have a clickable blocklet that enables/disables keep-presence
-by creating/deleting the `~/.keep-presence-disabled` file.
+I am using this additional functionality alongside i3blocks, whereby I have a
+clickable blocklet that enables/disables keep-presence by creating/deleting the
+`~/.keep-presence-disabled` file.
 
-I have also introduced an additional command line argument that controls whether keep-presence is disabled at startup.
+I have also introduced an additional command line argument that controls whether
+keep-presence is disabled at startup.
 
 
 ## Demo
@@ -25,15 +28,20 @@ I have also introduced an additional command line argument that controls whether
 keep-presence
 ```
 
-If you don't have the `snap` command available, you might be able to find instructions for your distro [here](https://docs.snapcraft.io/core/install).
+If you don't have the `snap` command available, you might be able to find
+instructions for your distro [here](https://docs.snapcraft.io/core/install).
 
 ## Manual installation
 
-```
-git clone https://github.com/carrot69/keep-presence.git
+The script requires `pynput`. To avoid issues, install it in a virtual
+environment; for example:
+
+```sh
+git clone https://github.com/Peptis/keep-presence.git
 cd keep-presence
-pip3 install pynput
-python3 src/keep-presence.py
+python -m venv .
+bin/pip3 install pynput
+bin/python3 src/keep-presence.py
 ```
 
 ## Optional arguments
